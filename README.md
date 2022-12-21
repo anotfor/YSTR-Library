@@ -4,3 +4,4 @@ It's first library of the Y series. It add many new functions for better work wi
 License: Apache License 2.0
 Version: YSTRLIB v1.2
 PL: C
+You can download source code and .a library.
