@@ -52,9 +52,10 @@ int ystrcmp(const char * str1, const char * str2) {
 	}
 }
 
-//сравниваем строки, пока str2 не закончится
-//если строки равны и str2 закончилась - возвращаем 1, иначе 0
-//то есть строки не равны или закончилась сначала 1 строка - то 0
+
+//compare strings until str2 ends
+//if strict and str2 ended - return 1, otherwise 0
+//that is, the string is unlimited or ended first with 1 string - then 0
 int _ystrstr(const char * str1, const char * str2) { 
 	for(int i1 = 0;; i1++) {
 		if(str2[i1] == 0) {
