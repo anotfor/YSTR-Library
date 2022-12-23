@@ -1,4 +1,13 @@
-﻿int ystrlen(const char * str);
+#pragma once
+
+/*
+Its list of functions
+Just include this file
+#include "ystrlib.h"
+but you need have files ystrlib.h and ystrlib.c in project
+*/
+
+int ystrlen(const char * str);
 const char * ystrchr(const char * str, char cc);
 int ystrcmp(const char * str1, const char * str2); 
 int _ystrstr(const char * str1, const char * str2);
