@@ -2,10 +2,10 @@
 #include <string.h>
 #include <stdlib.h>
 
-int ystrlen(const char * str) {
+unsigned int ystrlen(const char * str) {
 	int cyc;
 	for(cyc = 0;; cyc++) {
-		if(str[cyc] == 0) {
+		if(str[cyc] == '\0') {
 			//printf("%i", cyc); can print
 			break;
 		}
@@ -13,10 +13,22 @@ int ystrlen(const char * str) {
 	return cyc;
 }
 
-int ystrslen(const char * str) {
+unsigned int ystrlen_z(const char * str) {
 	int cyc;
 	for(cyc = 0;; cyc++) {
-		if(str[cyc] == 0 || str[cyc] == ' ') {
+		if(str[cyc] == '\0') {
+			//printf("%i", cyc); can print
+			++cyc;
+			break;
+		}
+	}
+	return cyc;
+}
+
+unsigned int ystrslen(const char * str, char ss) {
+	int cyc;
+	for(cyc = 0;; cyc++) {
+		if(str[cyc] == '\0' || str[cyc] == ss) {
 			//printf("%i", cyc); can print
 			break;
 		}
@@ -30,17 +42,17 @@ const char * ystrchr(const char * str, char cc) {
 		if(str[cyca] == cc) {
 			return str+cyca;
 		}
-		if(str[cyca] == 0) {
+		if(str[cyca] == '\0') {
 			break;
 		}
 	}
 	return 0;
 }
 
-int ystrcmp(const char * str1, const char * str2) { 
+int ystrcmp(const char * str1, const char * str2) {
 	int c1; // count 1
 	for(c1 = 0;; c1++) {
-		if((str1[c1]==0) || (str2[c1] == 0)) {
+		if((str1[c1]=='\0') || (str2[c1] == '\0')) {
 			return 0;
 		} else if(str1[c1] < str2[c1]) {
 			return -1;
@@ -52,11 +64,19 @@ int ystrcmp(const char * str1, const char * str2) {
 	}
 }
 
+int ystrlhcmp(const char * str1, const char * str2) {
+    unsigned int len1 = ystrlen_z(str1);
+    unsigned int len2 = ystrlen_z(str2);
+    if(len1 < len2) {
+        return -1;
+    } else if(len1 > len2) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
 
-//compare strings until str2 ends
-//if strict and str2 ended - return 1, otherwise 0
-//that is, the string is unlimited or ended first with 1 string - then 0
-int _ystrstr(const char * str1, const char * str2) { 
+int _ystrstr(const char * str1, const char * str2) {
 	for(int i1 = 0;; i1++) {
 		if(str2[i1] == 0) {
 			return 1;
@@ -70,7 +90,7 @@ int _ystrstr(const char * str1, const char * str2) {
 	}
 }
 
-const char * ystrstr(const char * str1, const char * str2) { 
+const char * ystrstr(const char * str1, const char * str2) {
 	for(int c1 = 0;str1[c1]!=0; c1++) {
 		if(_ystrstr(&str1[c1], str2) == 1) {
 			return str1+c1;
@@ -98,6 +118,16 @@ char * ystrndel(char * str, char s) {
 		}
 	}
 	return str;
+}
+
+int ystrrep(char str[], char bef, char aft) {
+    int x = 0;
+    for(; str[x] != '\0'; x++) {
+        if(str[x] == bef) {
+            str[x] = aft;
+        }
+    }
+    return 0;
 }
 
 char * ystrncpy(char * dst, const char * src, size_t num) {
@@ -138,10 +168,26 @@ const char * ystrsrh(const char * str1, const char * str2) {
 	}
 	return 0;
 }
+
+char * ystrscat(const char * str1, const char * str2) {
+	int lstr1 = ystrlen(str1);
+	int lstr2 = ystrlen(str2);
+	char *str3 = malloc(lstr1+lstr2+1);
+	int cc;
+	for(cc = 0; str1[cc] != 0; cc++) {
+		str3[cc] = str1[cc];
+	}
+	for(int cc2 = 0; str2[cc2] != 0; cc2++) {
+		str3[cc++] = str2[cc2];
+	}
+	str3[cc] = '\0';
+	return str3;
+}
+
 char * ystrcat(char * str1, const char * str2) {
 	int lstr1 = ystrlen(str1);
 	int lstr2 = ystrlen(str2);
-	str1 = realloc(str1, lstr1+lstr2+10);
+	str1 = realloc(str1, lstr1+lstr2+1);
 	int cc;
 	for(cc = 0; str1[cc] != 0; cc++) {
 		;
@@ -164,7 +210,7 @@ char * ystrrev(char * str) {
 		str[step2] = tmp[step];
 	}
 	return str;
-}       
+}
 
 char * ystrlswp(char * str) {
 	int n = ystrlen(str);
@@ -192,7 +238,7 @@ char * ystrfswp(char * str) {
 	return str;
 }
 
-int ystrlcmp(const char * str, int size) {
+int ystrlcmp(const char * str, unsigned int size) {
 	int n = ystrlen(str);
 	if(n<size) {
 		return -1;
@@ -275,8 +321,8 @@ char * ystrsscpy(char * dst, const char * src, size_t num) {
 	return dst;
 }
 
-char * ystrsdup(const char * str) {
-	int entr = ystrslen(str)+1;
+char * ystrsdup(const char * str, char sl) {
+	int entr = ystrslen(str, sl)+1;
 	char * ss = malloc(entr);
 	ystrsscpy(ss, str, entr);
 	return ss;
@@ -287,14 +333,25 @@ char * ystrscut(char * str) {
 		str[x] = '\07';
 		if(str[x] == ' ') {
 			str[x] = '\07';
-			break; 
+			break;
 		}
 	}
 	return str;
 }
 
+char * ystrsscut(char * str1, const char * str2) {
+    for(int x = 0; str1[x] != '\0'; x++) {
+        for(int y = 0; str2[y] != '\0'; y++) {
+            if(str1[x] == str2[y]) {
+                str1[x] = '\07';
+            }
+        }
+    }
+    return 0;
+}
+
 int ystrscnt(const char * str) {
-	int jj = 1;
+	int jj = 0;
 	for(int ii = 0; str[ii] == 0; ii++) {
 		if(str[ii] == ' ') {
 			jj++;
@@ -303,3 +360,46 @@ int ystrscnt(const char * str) {
 	return jj;
 }
 
+int ystrnscnt(const char * str, char sym) {
+	int jj = 0;
+	for(int ii = 0; str[ii] == 0; ii++) {
+		if(str[ii] == sym) {
+			jj++;
+		}
+	}
+	return jj;
+}
+
+int ystrslc(char * buf, const char * str, int index1, int index2) {
+    for(int x = index1; x<index2; x++) {
+        buf[x-index1] = str[x];
+    }
+    return 0;
+}
+
+int ystrtok(char buf[], char * str, int in, char ss) {
+    int c = 0;
+    int c2 = 0;
+    for(int x = 0; 0 != str[x]; x++) {
+        if(str[x] == ss) {
+            ++c;
+        }
+        if(in == c) {
+            for(int y = x;; y++, c2++) {
+                buf[c2] = str[y];
+                if(buf[0] == ss) {
+                   ++y;
+                   buf[c2] = str[y];
+                }
+                if(buf[c2] == '\0') {
+                    return 0;
+                }
+                if(str[y] == ss) {
+                    buf[c2] = '\0';
+                    return 0;
+                }
+            }
+        }
+    }
+    return 0;
+}

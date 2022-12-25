@@ -1,15 +1,8 @@
-#pragma once
-
-/*
-Its list of functions
-Just include this file
-#include "ystrlib.h"
-but you need have files ystrlib.h and ystrlib.c in project
-*/
-
-int ystrlen(const char * str);
+﻿unsigned int ystrlen(const char * str);
+unsigned int ystrslen(const char * str, char ss);
+unsigned int ystrlen_z(const char * str);
 const char * ystrchr(const char * str, char cc);
-int ystrcmp(const char * str1, const char * str2); 
+int ystrcmp(const char * str1, const char * str2);
 int _ystrstr(const char * str1, const char * str2);
 const char * ystrstr(const char * str1, const char * str2);
 char * ystrdel(char * str);
@@ -30,5 +23,10 @@ char * ystrsdup(const char * str);
 char * ystrsscpy(char * dst, const char * src, size_t num);
 char * ystrscut(char * str);
 int ystrscnt(const char * str);
+int ystrnscnt(const char * str, char sym);
 char * ystrndup(const char * str, int entr);
-int ystrsecnt(const char * str);
+int ystrslc(char * buf, const char * str, int index1, int index2);
+char * ystrscat(const char * str1, const char * str2);
+int ystrrep(char str[], char bef, char aft);
+int ystrlhcmp(const char * str1, const char * str2);
+int ystrtok(char buf[], char * str, int in, char ss);
